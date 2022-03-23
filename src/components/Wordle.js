@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Row from './Row'
 
 export const GUESS_COUNT = 6
+export const WORD_LENGTH = 5
 export const STATUS = {
   active: 'active',
   submitted: 'submitted',
@@ -17,7 +18,7 @@ const Wordle = () => {
   const rows = words.map(word => {
     return (
       <Row 
-        letters={word}
+        word={word}
         status={STATUS.submitted}
       ></Row>
     )
@@ -29,9 +30,9 @@ const Wordle = () => {
   } else {
     if (words.length < GUESS_COUNT) {
       // Proceed with the next guess
-      rows.concat((
+      rows.push((
         <Row
-          letters={''}
+          word={''}
           status={STATUS.active}
         ></Row>
       ))
@@ -43,9 +44,9 @@ const Wordle = () => {
 
   // Create empty rows for the remaining guesses
   for (let x = 0; x < GUESS_COUNT - rows.length; x ++) {
-    rows.concat((
+    rows.push((
       <Row 
-        letters={''}
+        word={''}
         status={STATUS.remained}
       ></Row>
     ))

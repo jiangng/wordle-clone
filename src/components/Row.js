@@ -1,20 +1,41 @@
 import React from "react";
 import Letter from "./Letter"
-import { GUESS_COUNT } from "./Wordle";
+import { STATUS, GUESS_COUNT, WORD_LENGTH } from "./Wordle";
 
 const Row = props => {
-  const [currentWord, setCurrentWord] = useState('')
+  const [guess, setGuess] = useState('')
+  let letters = []
 
-  const letters = props.letters.map(letter => {
-    return (
-      <Letter value={letter}></Letter>
-    )
-  })
-  for (let x = 0; x < GUESS_COUNT - letters.length; x ++) {
-    letters.concat((
-      <Letter value={letter}></Letter>
-    ))
+  switch (props.status) {
+    case STATUS.submitted:
+      letters = props.word.map(letter => {
+        return (
+          <Letter value={letter}></Letter>
+        )
+      })
+      break
+    case STATUS.remained:
+      for (let x = 0; x < WORD_LENGTH; x ++) {
+        letters.push((
+          <Letter value=''></Letter>
+        ))
+      }
+      break
+    case STATUS.active:
+      for (let x = 0; x < guess.length; x++) {
+        letters.push((
+          <Letter value={guess[x]}></Letter>
+        ))
+      }
+      for (let x = 0; x < WORD_LENGTH - guess.length; x++) {
+        letters.push((
+          <Letter value=''></Letter>
+        ))
+      }    
+      break  
   }
+
+  
 
   return (
     <div class="grid">
