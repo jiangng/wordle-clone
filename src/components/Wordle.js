@@ -12,6 +12,12 @@ const WORD_OF_THE_DAY = 'react'
 
 const Wordle = () => {
 
+  const handleSubmit = guess => {
+    const list = words.slice()
+    list.push(guess)
+    setWords(list)
+  }
+
   const [words, setWords] = useState([])
 
   // Create rows for submitted words
@@ -34,6 +40,7 @@ const Wordle = () => {
         <Row
           word={''}
           status={STATUS.active}
+          onSubmit={handleSubmit}
         ></Row>
       ))
     } else {

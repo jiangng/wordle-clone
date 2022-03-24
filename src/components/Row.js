@@ -9,16 +9,23 @@ const Row = props => {
     setGuess(guess)
   }
 
+  const handleSubmit = _ => {
+    if (guess.length !== WORD_LENGTH)
+      console.error('The guess word length is not 5.')
+
+    props.onSubmit(guess)
+  }
+
   const [guess, setGuess] = useState('')
   let letters = []
 
   switch (props.status) {
     case STATUS.submitted:
-      letters = props.word.map(letter => {
-        return (
-          <Letter value={letter}></Letter>
-        )
-      })
+      for (let x = 0; x < props.word.length; x++) {
+        letters.push((
+          <Letter value={props.word[x]}></Letter>
+        ))
+      }
       break
     case STATUS.remained:
     case STATUS.active:
@@ -41,6 +48,7 @@ const Row = props => {
         <GuessInput
           guess={guess}
           onChange={handleGuessInputChange}
+          onSubmit={handleSubmit}
         ></GuessInput>
       }
 
