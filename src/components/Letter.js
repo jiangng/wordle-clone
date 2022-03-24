@@ -9,3 +9,5 @@ const Letter = props => {
     </div>
   )
 }
+
+export default Letter

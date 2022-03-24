@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Letter from "./Letter"
-import { STATUS, GUESS_COUNT, WORD_LENGTH } from "./Wordle";
+import GuessInput from "./GuessInput";
+import { STATUS, WORD_LENGTH } from "./Wordle";
 
 const Row = props => {
+
+  const handleGuessInputChange = guess => {
+    setGuess(guess)
+  }
+
   const [guess, setGuess] = useState('')
   let letters = []
 
@@ -15,12 +21,6 @@ const Row = props => {
       })
       break
     case STATUS.remained:
-      for (let x = 0; x < WORD_LENGTH; x ++) {
-        letters.push((
-          <Letter value=''></Letter>
-        ))
-      }
-      break
     case STATUS.active:
       for (let x = 0; x < guess.length; x++) {
         letters.push((
@@ -35,10 +35,15 @@ const Row = props => {
       break  
   }
 
-  
-
   return (
     <div class="grid">
+      {props.status === STATUS.active &&
+        <GuessInput
+          guess={guess}
+          onChange={handleGuessInputChange}
+        ></GuessInput>
+      }
+
       {letters}
     </div>
   )
