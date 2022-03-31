@@ -13,18 +13,22 @@ const WORD_OF_THE_DAY = 'react'
 const Wordle = () => {
 
   const handleSubmit = guess => {
-    const list = words.slice()
-    list.push(guess)
-    setWords(list)
+    setWords(words => {
+      const list = words.slice()
+      list.push(guess)
+      return list
+    })
   }
 
   const [words, setWords] = useState([])
 
   // Create rows for submitted words
-  const rows = words.map(word => {
+  const rows = words.map((word, index) => {
     return (
       <Row 
-        word={word}
+        key={index}
+        rowId={index}
+        // word={word}
         status={STATUS.submitted}
       ></Row>
     )
@@ -38,7 +42,9 @@ const Wordle = () => {
       // Proceed with the next guess
       rows.push((
         <Row
-          word={''}
+          key={words.length}
+          rowId={words.length}
+          // word={''}
           status={STATUS.active}
           onSubmit={handleSubmit}
         ></Row>
@@ -50,17 +56,19 @@ const Wordle = () => {
   }
 
   // Create empty rows for the remaining guesses
-  for (let x = 0; x < GUESS_COUNT - rows.length; x ++) {
+  for (let x = 0, init_row_length = rows.length; x < GUESS_COUNT - init_row_length; x ++) {
     rows.push((
       <Row 
-        word={''}
+        key={rows.length}
+        rowId={rows.length}
+        // word={''}
         status={STATUS.remained}
       ></Row>
     ))
   }
 
   return (
-    <div id='board'>
+    <div id='board' className='container'>
       {rows}
     </div>
   )

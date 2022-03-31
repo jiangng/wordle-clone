@@ -1,57 +1,84 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Letter from "./Letter"
-import GuessInput from "./GuessInput";
 import { STATUS, WORD_LENGTH } from "./Wordle";
 
 const Row = props => {
-
-  const handleGuessInputChange = guess => {
-    setGuess(guess)
-  }
-
-  const handleSubmit = _ => {
-    if (guess.length !== WORD_LENGTH)
-      console.error('The guess word length is not 5.')
-
-    props.onSubmit(guess)
-  }
-
   const [guess, setGuess] = useState('')
-  let letters = []
 
-  switch (props.status) {
-    case STATUS.submitted:
-      for (let x = 0; x < props.word.length; x++) {
-        letters.push((
-          <Letter value={props.word[x]}></Letter>
-        ))
+  // Run after rendering completes
+  useEffect(() => {
+    const handleKeyDown = e => {    
+      const handleEnterPressed = () => {
+        let willSubmit = false
+        let guess
+    
+        // Call setGuess to obtain the latest guess word
+        setGuess(_guess => {
+          if (_guess.length === WORD_LENGTH) {
+            willSubmit = true
+            guess = _guess
+          } else {
+            console.error('The guess word length is not 5.')
+          }
+    
+          return _guess
+        })
+    
+        if (willSubmit) props.onSubmit(guess)
       }
-      break
-    case STATUS.remained:
+
+      //Regex for Valid Characters i.e. Alphabets.
+      const regex = /^[A-Za-z]+$/;
+
+      const keyCode = e.keyCode || e.which;
+      if (regex.test(String.fromCharCode(keyCode))) {
+        setGuess(guess => guess + e.key)
+      } else if (e.key === 'Enter') {
+        handleEnterPressed()
+      } else if (e.key === 'Backspace') {
+        setGuess(guess => guess.slice(0, -1))
+      }
+    }
+
+    if (props.status === STATUS.active) {
+      window.addEventListener('keydown', handleKeyDown)
+    }
+    
+    // Cleanup runs during unmounting OR before running the effect i.e. cleaning up the previous effect
+    return () => window.removeEventListener('keydown', handleKeyDown)
+    
+  }, [props.status])
+
+  let letters = []
+  switch (props.status) {
     case STATUS.active:
+    case STATUS.submitted: 
       for (let x = 0; x < guess.length; x++) {
         letters.push((
-          <Letter value={guess[x]}></Letter>
+          <Letter key={x} value={guess[x]}></Letter>
         ))
       }
+
       for (let x = 0; x < WORD_LENGTH - guess.length; x++) {
         letters.push((
-          <Letter value=''></Letter>
+          <Letter key={guess.length + x} value=''></Letter>
         ))
       }    
       break  
+
+    case STATUS.remained:
+      for (let x = 0; x < WORD_LENGTH; x++) {
+        letters.push((
+          <Letter key={x} value=''></Letter>
+        ))
+      }    
+      break
+
+    default:
   }
 
   return (
-    <div class="grid">
-      {props.status === STATUS.active &&
-        <GuessInput
-          guess={guess}
-          onChange={handleGuessInputChange}
-          onSubmit={handleSubmit}
-        ></GuessInput>
-      }
-
+    <div className="row">
       {letters}
     </div>
   )
