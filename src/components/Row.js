@@ -1,30 +1,40 @@
 import React, { useEffect, useState } from "react";
+import DICTIONARY from "../dictionary";
 import Letter from "./Letter"
 import { STATUS, WORD_LENGTH } from "./Wordle";
 
 const Row = props => {
   const [guess, setGuess] = useState('')
 
-  // Run after rendering completes
+  // Note: useEffect runs after rendering completes
+  // Set up keydown event listener
   useEffect(() => {
     const handleKeyDown = e => {    
+      
       const handleEnterPressed = () => {
-        let willSubmit = false
-        let guess
-    
-        // Call setGuess to obtain the latest guess word
-        setGuess(_guess => {
-          if (_guess.length === WORD_LENGTH) {
-            willSubmit = true
-            guess = _guess
-          } else {
+        const checkGuess = guess => {
+          if (guess.length !== WORD_LENGTH) {            
             console.error('The guess word length is not 5.')
+            return false          
+          } 
+          
+          if (!DICTIONARY.includes(guess)) {
+            console.error('This word does not exist.')
+            return false
           }
-    
+  
+          return true
+        } 
+        
+        // Call setGuess to obtain the latest guess word
+        let guess
+        setGuess(_guess => {
+          guess = _guess
           return _guess
         })
-    
-        if (willSubmit) props.onSubmit(guess)
+
+        if (checkGuess(guess)) 
+          props.onSubmit(guess)
       }
 
       //Regex for Valid Characters i.e. Alphabets.
@@ -46,7 +56,6 @@ const Row = props => {
     
     // Cleanup runs during unmounting OR before running the effect i.e. cleaning up the previous effect
     return () => window.removeEventListener('keydown', handleKeyDown)
-    
   }, [props.status])
 
   let letters = []
