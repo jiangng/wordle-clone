@@ -50,32 +50,16 @@ const Row = props => {
   }, [props.status])
 
   let letters = []
-  switch (props.status) {
-    case STATUS.active:
-    case STATUS.submitted: 
-      for (let x = 0; x < guess.length; x++) {
-        letters.push((
-          <Letter key={x} value={guess[x]}></Letter>
-        ))
-      }
-
-      for (let x = 0; x < WORD_LENGTH - guess.length; x++) {
-        letters.push((
-          <Letter key={guess.length + x} value=''></Letter>
-        ))
-      }    
-      break  
-
-    case STATUS.remained:
-      for (let x = 0; x < WORD_LENGTH; x++) {
-        letters.push((
-          <Letter key={x} value=''></Letter>
-        ))
-      }    
-      break
-
-    default:
+  for (let x = 0; x < guess.length; x++) {
+    letters.push((
+      <Letter key={x} value={guess[x]}></Letter>
+    ))
   }
+  for (let x = 0; x < WORD_LENGTH - guess.length; x++) {
+    letters.push((
+      <Letter key={guess.length + x} value=''></Letter>
+    ))
+  }   
 
   return (
     <div className="row">
