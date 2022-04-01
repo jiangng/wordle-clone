@@ -25,7 +25,7 @@ const Row = props => {
   
           return true
         } 
-        
+
         // Call setGuess to obtain the latest guess word
         let guess
         setGuess(_guess => {
@@ -42,7 +42,11 @@ const Row = props => {
 
       const keyCode = e.keyCode || e.which;
       if (regex.test(String.fromCharCode(keyCode))) {
-        setGuess(guess => guess + e.key)
+        setGuess(guess => {
+          if (guess.length === WORD_LENGTH)
+            return guess
+          return guess + e.key
+        })
       } else if (e.key === 'Enter') {
         handleEnterPressed()
       } else if (e.key === 'Backspace') {
@@ -71,7 +75,7 @@ const Row = props => {
   }   
 
   return (
-    <div className="row">
+    <div className="row g-2">
       {letters}
     </div>
   )
