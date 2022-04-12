@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 const Letter = props => {
   return (
     <div className="col">
-      <div className="p-3 border border-dark">{props.value}</div>
+      <div className={"p-3 border border-dark " + props.colour}>{props.value}</div>
     </div>
   )
 }

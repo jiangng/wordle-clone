@@ -8,7 +8,7 @@ export const STATUS = {
   submitted: 'submitted',
   remained: 'remained'
 }
-const WORD_OF_THE_DAY = 'react'
+const WORD_OF_THE_DAY = 'sails'
 
 const Wordle = () => {
 
@@ -28,7 +28,6 @@ const Wordle = () => {
       <Row 
         key={index}
         rowId={index}
-        // word={word}
         status={STATUS.submitted}
       ></Row>
     )
@@ -36,7 +35,7 @@ const Wordle = () => {
 
   if (words[words.length - 1] === WORD_OF_THE_DAY) {
     // Win
-    
+    console.log('you win')
   } else {
     if (words.length < GUESS_COUNT) {
       // Proceed with the next guess
@@ -44,14 +43,14 @@ const Wordle = () => {
         <Row
           key={words.length}
           rowId={words.length}
-          // word={''}
           status={STATUS.active}
           onSubmit={handleSubmit}
+          answer={WORD_OF_THE_DAY}
         ></Row>
       ))
     } else {
       // Game over
-
+      console.log('you lose')
     }
   }
 
@@ -61,7 +60,6 @@ const Wordle = () => {
       <Row 
         key={rows.length}
         rowId={rows.length}
-        // word={''}
         status={STATUS.remained}
       ></Row>
     ))
